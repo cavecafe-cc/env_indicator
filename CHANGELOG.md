@@ -8,3 +8,10 @@
   - Positioned overlay that doesn't interfere with app UI
   - Support for both Android and iOS platforms
   - Can be used with [flutter_dotenv](https://pub.dev/packages/flutter_dotenv) to load environment settings from a file, but not required
+
+## 0.9.1
+* Added larger screenshots to README
+
+## 0.9.2
+* Run dart format to qualify code static analysis
+* Update README

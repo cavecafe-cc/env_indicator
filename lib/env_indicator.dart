@@ -27,8 +27,11 @@ class AppInfo {
     return Color(int.parse(buffer.toString(), radix: 16));
   }
 
-  Future<void> init(String? env, {String? dotColor = defaultColorHex, String? textColor = defaultColorHex}) async {
-
+  Future<void> init(
+    String? env, {
+    String? dotColor = defaultColorHex,
+    String? textColor = defaultColorHex,
+  }) async {
     env ??= defaultEnv;
     dotColor ??= defaultColorHex;
     textColor ??= defaultColorHex;
@@ -42,7 +45,7 @@ class AppInfo {
     version = packageInfo.version;
     build = packageInfo.buildNumber;
     deviceModel = await _getDeviceModel();
-    osVersion =  await _getOsVersionInfo();
+    osVersion = await _getOsVersionInfo();
     deviceDetail = Platform.operatingSystemVersion;
   }
 
@@ -52,12 +55,10 @@ class AppInfo {
     if (Platform.isAndroid) {
       AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
       return "${androidInfo.manufacturer} ${androidInfo.model}"; // ex: Google Pixel 7
-    }
-    else if (Platform.isIOS) {
+    } else if (Platform.isIOS) {
       IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
       return iosInfo.utsname.machine; // ex: iPhone15,3
-    }
-    else {
+    } else {
       return " ? ";
     }
   }
@@ -68,35 +69,30 @@ class AppInfo {
     if (Platform.isAndroid) {
       final androidInfo = await deviceInfo.androidInfo;
       return "Android API Level ${androidInfo.version.sdkInt} (${androidInfo.version.release})"; // ex: "Android API Level 34 (14)"
-    }
-    else if (Platform.isIOS) {
+    } else if (Platform.isIOS) {
       final iosInfo = await deviceInfo.iosInfo;
       return "iOS ${iosInfo.systemVersion}"; // ex: "iOS 17.5.1"
-
-    }
-    else {
+    } else {
       return " ? ";
     }
   }
 
   bool isProduction() => (env == defaultEnv);
-
 }
-
 
 class EnvIndicator extends StatelessWidget {
   final AppInfo appInfo;
 
-  const EnvIndicator({
-    super.key,
-    required this.appInfo
-  });
+  const EnvIndicator({super.key, required this.appInfo});
 
   @override
   Widget build(BuildContext context) {
     if (appInfo.isProduction()) return const SizedBox.shrink();
 
-    final textStyle = const TextStyle(color: Colors.white, decoration: TextDecoration.none);
+    final textStyle = const TextStyle(
+      color: Colors.white,
+      decoration: TextDecoration.none,
+    );
 
     return Positioned(
       right: 16,
@@ -115,8 +111,14 @@ class EnvIndicator extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(appInfo.build, style: textStyle.copyWith(fontSize: 7, color: Colors.white)),
-                Text(appInfo.env, style: textStyle.copyWith(fontSize: 4, color: Colors.white)),
+                Text(
+                  appInfo.build,
+                  style: textStyle.copyWith(fontSize: 7, color: Colors.white),
+                ),
+                Text(
+                  appInfo.env,
+                  style: textStyle.copyWith(fontSize: 4, color: Colors.white),
+                ),
               ],
             ),
           ),
@@ -127,8 +129,20 @@ class EnvIndicator extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('App (${appInfo.version}) - ${appInfo.osVersion}', style: textStyle.copyWith(fontSize: 6, color: appInfo.envTextColor)),
-                Text('${appInfo.deviceModel} - ${appInfo.deviceDetail}', style: textStyle.copyWith(fontSize: 6, color: appInfo.envTextColor)),
+                Text(
+                  'App (${appInfo.version}) - ${appInfo.osVersion}',
+                  style: textStyle.copyWith(
+                    fontSize: 6,
+                    color: appInfo.envTextColor,
+                  ),
+                ),
+                Text(
+                  '${appInfo.deviceModel} - ${appInfo.deviceDetail}',
+                  style: textStyle.copyWith(
+                    fontSize: 6,
+                    color: appInfo.envTextColor,
+                  ),
+                ),
               ],
             ),
           ),
