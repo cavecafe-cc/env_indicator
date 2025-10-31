@@ -4,8 +4,12 @@ A simple Flutter widget that displays environment information (DEV/QA/PROD) and
 device details in your app. This indicator is only visible in non-production
 environments.
 
+## Screenshots
+
+_iOS: QA Environment, with build #12, OS version 26.0.1, app version 0.1.0, and device iPhone 13_ 
 <img src="iOS-QA-result.png" alt="iOS QA Environment" width="80%"/>
 
+_Android: DEV Environment, with build #27, OS version 11, app version 0.1.0, and device Pixel 5a_
 <img src="Android-DEV-result.png" alt="Android DEV Environment" width="80%"/>
 
 ## Features
