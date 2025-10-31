@@ -15,3 +15,4 @@
 ## 0.9.2
 * Run dart format to qualify code static analysis
 * Update README
+* Added DartDoc style comments
