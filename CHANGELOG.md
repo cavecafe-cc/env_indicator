@@ -16,3 +16,5 @@
 * Run dart format to qualify code static analysis
 * Update README
 * Added DartDoc style comments
+* Corrected description on the sample screenshots
+* Remove excessive linter warnings
