@@ -8,6 +8,7 @@ class AppInfo {
   /// default values
   static const String defaultEnv = 'PROD';
   static const String defaultColorHex = '000000';
+
   /// [defaultColor] is not only set as transparent but also DO NOT show the [SizedBox] itself in the [build] function
   static const Color defaultColor = Colors.transparent;
 
@@ -91,12 +92,12 @@ class AppInfo {
 
 /// A widget that displays the current app environment
 /// (DEV, QA, or PROD) as a small colored indicator on screen.
-/// 
+///
 /// The indicator is shown as a circular dot in the top-right corner
 /// of the screen. It displays the build number and environment name
 /// inside the dot, along with additional app/device details in a
 /// rotated text panel below.
-/// 
+///
 /// This widget is only visible in non-production environments.
 /// In production (PROD) builds, it renders as an empty [SizedBox].
 class EnvIndicator extends StatelessWidget {
