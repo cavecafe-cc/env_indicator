@@ -1,0 +1,20 @@
+name: env_indicator
+description: "Flutter Environment Indicator"
+version: 0.0.1
+homepage: https://cavecafe.cc
+
+environment:
+  sdk: ^3.9.2
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  device_info_plus: ^12.2.0
+  package_info_plus: ^9.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0

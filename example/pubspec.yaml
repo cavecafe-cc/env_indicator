@@ -1,0 +1,16 @@
+name: example
+description: "example for env_indicator"
+publish_to: 'none'
+version: 0.1.0+27
+environment:
+  sdk: '>=3.8.0 <4.0.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  env_indicator:
+    path: ../
+  flutter_dotenv: ^6.0.0
+
+flutter:
+  assets:
+    - .env
