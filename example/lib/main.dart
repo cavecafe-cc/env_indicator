@@ -23,8 +23,11 @@ Future<void> main() async {
   /// Get text color of the device detail as RGB hex value (e.g. '050506')
   final String? textColor = dotenv.env['ENV_TEXT_COLOR'];
 
+  /// Get the top position of the indicator
+  final double? height = double.parse(dotenv.env['ENV_LABEL_HEIGHT'] ?? '90');
+
   appInfo = AppInfo();
-  await appInfo.init(env, dotColor: dotColor, textColor: textColor);
+  await appInfo.init(env, dotColor: dotColor, textColor: textColor, height: height);
   runApp(const MyApp());
 }
 

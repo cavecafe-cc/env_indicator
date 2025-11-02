@@ -18,3 +18,7 @@ Initial release with the following features:
 * Added DartDoc style comments
 * Corrected description on the sample screenshots
 * Remove excessive linter warnings
+
+## 0.9.3
+* Added option to set the top location of the indicator
+* Updated examples

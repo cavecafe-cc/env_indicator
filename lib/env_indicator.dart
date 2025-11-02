@@ -8,6 +8,7 @@ class AppInfo {
   /// default values
   static const String defaultEnv = 'PROD';
   static const String defaultColorHex = '000000';
+  static const double defaultHeight = 90;
 
   /// [defaultColor] is not only set as transparent but also DO NOT show the [SizedBox] itself in the [build] function
   static const Color defaultColor = Colors.transparent;
@@ -15,6 +16,7 @@ class AppInfo {
   String env = defaultEnv;
   Color envDotColor = defaultColor;
   Color envTextColor = defaultColor;
+  double envHeight = defaultHeight;
 
   String version = '0.0.0';
   String build = '0';
@@ -31,14 +33,17 @@ class AppInfo {
     String? env, {
     String? dotColor = defaultColorHex,
     String? textColor = defaultColorHex,
+    double? height = defaultHeight
   }) async {
     env ??= defaultEnv;
     dotColor ??= defaultColorHex;
     textColor ??= defaultColorHex;
+    height ??= defaultHeight;
 
     this.env = env.toUpperCase();
     envDotColor = _hexToColor(dotColor);
     envTextColor = _hexToColor(textColor);
+    envHeight = height;
 
     final packageInfo = await PackageInfo.fromPlatform();
     package = packageInfo.packageName;
@@ -118,7 +123,7 @@ class EnvIndicator extends StatelessWidget {
 
     return Positioned(
       right: 16,
-      top: 60,
+      top: appInfo.envHeight,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
