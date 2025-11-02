@@ -33,6 +33,7 @@ Import the package:
 flutter pub add env_indicator
 ```
 
+Add the widget to your app:
 ```dart
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
