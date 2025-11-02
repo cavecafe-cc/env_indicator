@@ -14,7 +14,7 @@ environments.
 
 <img src="Android-DEV-result.png" alt="Android DEV Environment" width="80%"/>
 
-## Features
+### Features
 
 - Environment indicator dot with customizable colors
 - Shows build number and environment name
@@ -24,29 +24,9 @@ environments.
 - Support for both Android and iOS platforms
 - Can be used with [flutter_dotenv](https://pub.dev/packages/flutter_dotenv) to load environment settings from a file, but not required
 
-## Getting Started
-
-### .env file for example
-```ini
-## For DEV environment
-ENV_NAME=DEV
-ENV_DOT_COLOR=284B29
-ENV_TEXT_COLOR=030206
-ENV_LABEL_HEIGHT=90
-```
-
-```ini
-## For QA environment
-ENV_NAME=QA
-ENV_DOT_COLOR=53015F
-ENV_TEXT_COLOR=010101
-ENV_LABEL_HEIGHT=90
-```
-
+### Usage
 
 Add this package to your Flutter project's dependencies:
-
-## Usage
 
 Import the package:
 ```bash
@@ -66,10 +46,10 @@ Future<void> main() async {
   /// initialize AppInfo instance
   appInfo = AppInfo();
   await appInfo.init(
-      env: 'DEV',           /// environment name (i.e., 'DEV', 'QA', 'PROD')
-      dotColor: '284B29',   /// color of the dot (RGB hex value i.e., '115E12')
-      textColor: '030206',   /// color of the text (RGB hex value i.e., '050506')
-      height: '120',         /// top position (height) of the label (in pixels)
+      env: 'DEV',          /// environment name (i.e., 'DEV', 'QA', 'PROD')
+      dotColor: '284B29',  /// color of the dot (RGB hex value)
+      textColor: '030206', /// color of the text (RGB hex value)
+      height: '120',       /// top position of the label
   );
   
   runApp(const MyApp());
@@ -106,59 +86,68 @@ class MyApp extends StatelessWidget {
 }
 ```
 
+### Load environment settings from a file
 
-Using [flutter_dotenv] package to load environment settings from a file
+Additionally, [flutter_dotenv](https://pub.dev/packages/flutter_dotenv) package can be used to load environment settings from a file instead of hard-coding them.
 
+* .DEV.env
+```bash
+## For DEV environment
+ENV_NAME=DEV
+ENV_DOT_COLOR=284B29
+ENV_TEXT_COLOR=030206
+ENV_LABEL_HEIGHT=90
+```
+* .QA.env
+```bash
+## For QA environment
+ENV_NAME=QA
+ENV_DOT_COLOR=53015F
+ENV_TEXT_COLOR=010101
+ENV_LABEL_HEIGHT=90
+```
+
+* pubspec.yaml
+
+```yaml
+dependencies:
+  flutter_dotenv:
+  env_indicator:
+
+flutter:
+  
+  ## ...
+  
+  assets:
+    - .env
+    - .DEV.env
+    - .QA.env
+```
+
+
+* main.dart
 ```dart
 Future<void> main() async {
 
-  /// Load environment settings from .env file 
-  /// (required only if you want to maintain those values without changing source code)
-  await dotenv.load(fileName: '.env');
-  final String? env = dotenv.env['ENV_NAME'];
+  /// Load environment settings from .env file
+  await dotenv.load(fileName: '.DEV.env'); // or .QA.env, otherwise PROD
+  final String env = dotenv.env['ENV_NAME'] ?? 'PROD';
   final String? dotColor = dotenv.env['ENV_DOT_COLOR'];
   final String? textColor = dotenv.env['ENV_TEXT_COLOR'];
   final String? height = dotenv.env['ENV_LABEL_HEIGHT'];
 
   /// Initialize the AppInfo
   appInfo = AppInfo();
-  await appInfo.init(env, dotColor: dotColor, textColor: textColor, height: height);
+  await appInfo.init(
+      env: env, 
+      dotColor: dotColor, 
+      textColor: textColor, 
+      height: height
+  );
 
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(title: const Text('Example')),
-        body: Stack(
-          children: [
-            Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: const [
-                  Text('Relax!', style: TextStyle(fontSize: 36.0)),
-                  Text(
-                    'And, check your app detail.',
-                    style: TextStyle(fontSize: 18.0),
-                  ),
-                ],
-              ),
-            ),
-
-            /// Locate EnvIndicator
-            EnvIndicator(appInfo: appInfo),
-          ],
-
-        ),
-      ),
-    );
-  }
-}
+// ... other code 
 
 ```
