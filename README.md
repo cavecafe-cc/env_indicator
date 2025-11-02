@@ -65,13 +65,19 @@ Future<void> main() async {
 
   /// load DEV environment settings from a file
   await dotenv.load(fileName: '.env');
-  final String? env = dotenv.env['ENV_NAME']; // ex: 'DEV', 'QA', or 'PROD'
-  final String? dotColor = dotenv.env['ENV_DOT_COLOR']; // RGB hex value ex: '115E12'
-  final String? textColor = dotenv.env['ENV_TEXT_COLOR']; // RGB hex value ex: '050506'
-
+  
+  /// get environment name from .env file (i.e., 'DEV', 'QA', 'PROD')
+  final String? env = dotenv.env['ENV_NAME'];
+  /// get color of the dot (RGB hex value i.e., '115E12')
+  final String? dotColor = dotenv.env['ENV_DOT_COLOR']; 
+  /// get color of the text (RGB hex value i.e., '050506')
+  final String? textColor = dotenv.env['ENV_TEXT_COLOR'];
+  /// get top position (height) of the label (in pixels)
+  final double? height = double.parse(dotenv.env['ENV_LABEL_HEIGHT'] ?? '90'); 
+  
   /// initialize AppInfo instance
   appInfo = AppInfo();
-  await appInfo.init(env, dotColor: dotColor, textColor: textColor);
+  await appInfo.init(env, dotColor: dotColor, textColor: textColor, height: height);
   
   runApp(const MyApp());
 }
