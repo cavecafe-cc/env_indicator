@@ -8,11 +8,11 @@ environments.
 
 * _iOS: QA Environment, with build #12, OS version 26.0.1, app version 0.1.0, and device iPhone 13 (iPhone14,5), Build 23A355_
 
-<img src="iOS-QA-result.png" alt="iOS QA Environment" width="80%"/>
+<img src="iOS-QA-result.png" alt="iOS QA Environment" width="50%"/>
 
 * _Android: DEV Environment, with build #27, OS version 11, app version 0.1.0, and device Google Pixel 6 Pro, API Level 36 (16)_
 
-<img src="Android-DEV-result.png" alt="Android DEV Environment" width="80%"/>
+<img src="Android-DEV-result.png" alt="Android DEV Environment" width="50%"/>
 
 ### Features
 

@@ -1,7 +1,7 @@
 name: env_indicator
 description: A Flutter widget that visually shows the current device info and app environment on every page.
   (i.e. DEV/QA, but not in PROD)
-version: 0.9.3+22
+version: 0.9.3+23
 homepage: https://github.com/cavecafe-cc/env_indicator
 repository: https://github.com/cavecafe-cc/env_indicator
 issue_tracker: https://github.com/cavecafe-cc/env_indicator/issues
