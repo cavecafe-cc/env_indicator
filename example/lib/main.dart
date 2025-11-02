@@ -11,7 +11,6 @@ late AppInfo appInfo;
 /// Loads environment variables from .env file and sets up the [AppInfo]
 /// instance with environment name and colors.
 Future<void> main() async {
-
   /// Load environment settings from .env file (required only if you want to maintain those values without changing source code per environment)
   await dotenv.load(fileName: '.env');
   final String? env = dotenv.env['ENV_NAME'];
@@ -21,7 +20,12 @@ Future<void> main() async {
 
   /// Initialize the AppInfo
   appInfo = AppInfo();
-  await appInfo.init(env, dotColor: dotColor, textColor: textColor, height: height);
+  await appInfo.init(
+    env,
+    dotColor: dotColor,
+    textColor: textColor,
+    height: height,
+  );
 
   runApp(const MyApp());
 }
@@ -53,11 +57,8 @@ class MyApp extends StatelessWidget {
             ),
 
             /// Locate EnvIndicator
-            EnvIndicator(
-              appInfo: appInfo,
-            ),
+            EnvIndicator(appInfo: appInfo),
           ],
-
         ),
       ),
     );

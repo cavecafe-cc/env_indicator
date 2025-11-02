@@ -33,7 +33,7 @@ class AppInfo {
     String? env, {
     String? dotColor = defaultColorHex,
     String? textColor = defaultColorHex,
-    String? height = defaultHeight
+    String? height = defaultHeight,
   }) async {
     env ??= defaultEnv;
     dotColor ??= defaultColorHex;
