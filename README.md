@@ -58,26 +58,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:env_indicator/env_indicator.dart';
 
-/// declare AppInfo instance
+/// Declare AppInfo instance
 late AppInfo appInfo;
 
 Future<void> main() async {
-
-  /// load DEV environment settings from a file
-  await dotenv.load(fileName: '.env');
-  
-  /// get environment name from .env file (i.e., 'DEV', 'QA', 'PROD')
-  final String? env = dotenv.env['ENV_NAME'];
-  /// get color of the dot (RGB hex value i.e., '115E12')
-  final String? dotColor = dotenv.env['ENV_DOT_COLOR']; 
-  /// get color of the text (RGB hex value i.e., '050506')
-  final String? textColor = dotenv.env['ENV_TEXT_COLOR'];
-  /// get top position (height) of the label (in pixels)
-  final double? height = double.parse(dotenv.env['ENV_LABEL_HEIGHT'] ?? '90'); 
   
   /// initialize AppInfo instance
   appInfo = AppInfo();
-  await appInfo.init(env, dotColor: dotColor, textColor: textColor, height: height);
+  await appInfo.init(
+      env: 'DEV',           /// environment name (i.e., 'DEV', 'QA', 'PROD')
+      dotColor: '284B29',   /// color of the dot (RGB hex value i.e., '115E12')
+      textColor: '030206',   /// color of the text (RGB hex value i.e., '050506')
+      height: '120',         /// top position (height) of the label (in pixels)
+  );
   
   runApp(const MyApp());
 }
@@ -102,9 +95,66 @@ class MyApp extends StatelessWidget {
                 ],
               ),
             ),
-            /// Environment Indicator rendered here
-            EnvIndicator(appInfo: appInfo), 
+            
+            /// Locate EnvIndicator 
+            EnvIndicator(appInfo: appInfo),
           ],
+        ),
+      ),
+    );
+  }
+}
+```
+
+
+Using [flutter_dotenv] package to load environment settings from a file
+
+```dart
+Future<void> main() async {
+
+  /// Load environment settings from .env file 
+  /// (required only if you want to maintain those values without changing source code)
+  await dotenv.load(fileName: '.env');
+  final String? env = dotenv.env['ENV_NAME'];
+  final String? dotColor = dotenv.env['ENV_DOT_COLOR'];
+  final String? textColor = dotenv.env['ENV_TEXT_COLOR'];
+  final String? height = dotenv.env['ENV_LABEL_HEIGHT'];
+
+  /// Initialize the AppInfo
+  appInfo = AppInfo();
+  await appInfo.init(env, dotColor: dotColor, textColor: textColor, height: height);
+
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: AppBar(title: const Text('Example')),
+        body: Stack(
+          children: [
+            Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: const [
+                  Text('Relax!', style: TextStyle(fontSize: 36.0)),
+                  Text(
+                    'And, check your app detail.',
+                    style: TextStyle(fontSize: 18.0),
+                  ),
+                ],
+              ),
+            ),
+
+            /// Locate EnvIndicator
+            EnvIndicator(appInfo: appInfo),
+          ],
+
         ),
       ),
     );

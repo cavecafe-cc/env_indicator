@@ -11,23 +11,18 @@ late AppInfo appInfo;
 /// Loads environment variables from .env file and sets up the [AppInfo]
 /// instance with environment name and colors.
 Future<void> main() async {
-  /// Load environment settings from .env file
+
+  /// Load environment settings from .env file (required only if you want to maintain those values without changing source code per environment)
   await dotenv.load(fileName: '.env');
-
-  /// Get environment name ('DEV', 'QA', or 'PROD')
   final String? env = dotenv.env['ENV_NAME'];
-
-  /// Get dot indicator color as RGB hex value (e.g. '115E12')
   final String? dotColor = dotenv.env['ENV_DOT_COLOR'];
-
-  /// Get text color of the device detail as RGB hex value (e.g. '050506')
   final String? textColor = dotenv.env['ENV_TEXT_COLOR'];
+  final String? height = dotenv.env['ENV_LABEL_HEIGHT'];
 
-  /// Get the top position of the indicator
-  final double? height = double.parse(dotenv.env['ENV_LABEL_HEIGHT'] ?? '90');
-
+  /// Initialize the AppInfo
   appInfo = AppInfo();
   await appInfo.init(env, dotColor: dotColor, textColor: textColor, height: height);
+
   runApp(const MyApp());
 }
 
@@ -56,10 +51,13 @@ class MyApp extends StatelessWidget {
                 ],
               ),
             ),
+
+            /// Locate EnvIndicator
             EnvIndicator(
               appInfo: appInfo,
-            ), // ← Environment Indicator rendered here
+            ),
           ],
+
         ),
       ),
     );

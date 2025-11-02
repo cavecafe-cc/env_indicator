@@ -8,7 +8,7 @@ class AppInfo {
   /// default values
   static const String defaultEnv = 'PROD';
   static const String defaultColorHex = '000000';
-  static const double defaultHeight = 90;
+  static const String defaultHeight = '90';
 
   /// [defaultColor] is not only set as transparent but also DO NOT show the [SizedBox] itself in the [build] function
   static const Color defaultColor = Colors.transparent;
@@ -16,7 +16,7 @@ class AppInfo {
   String env = defaultEnv;
   Color envDotColor = defaultColor;
   Color envTextColor = defaultColor;
-  double envHeight = defaultHeight;
+  double envHeight = double.parse(defaultHeight);
 
   String version = '0.0.0';
   String build = '0';
@@ -33,7 +33,7 @@ class AppInfo {
     String? env, {
     String? dotColor = defaultColorHex,
     String? textColor = defaultColorHex,
-    double? height = defaultHeight
+    String? height = defaultHeight
   }) async {
     env ??= defaultEnv;
     dotColor ??= defaultColorHex;
@@ -43,7 +43,7 @@ class AppInfo {
     this.env = env.toUpperCase();
     envDotColor = _hexToColor(dotColor);
     envTextColor = _hexToColor(textColor);
-    envHeight = height;
+    envHeight = double.parse(height);
 
     final packageInfo = await PackageInfo.fromPlatform();
     package = packageInfo.packageName;
