@@ -23,5 +23,5 @@ Initial release with the following features:
 * Added option to set the top location of the indicator
 * Updated examples
 
-## 1.0.0
+## 1.0.0+31
 * Dependancy updates
