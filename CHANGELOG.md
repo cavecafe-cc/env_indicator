@@ -25,3 +25,8 @@ Initial release with the following features:
 
 ## 1.0.0+31
 * Dependancy updates
+
+## 1.0.1+32
+* Web support
+* Horver tooltip
+* Dart SDK version lower compatibility
