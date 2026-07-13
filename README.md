@@ -24,7 +24,12 @@ _iOS: QA Environment, with build #12, OS version 26.0.1, app version 0.1.0, and 
 - Displays app version, OS version, and device details
 - Auto-hides in production environment
 - Positioned overlay that doesn't interfere with app UI
-- Support for both Android and iOS platforms
+- Support for Android, iOS, and Web platforms
+- Web-specific optimizations:
+  - 2x size scaling (60.0 diameter) for high-resolution desktop browsers
+  - Mouse hover region overlay card with Midnight Aesthetics theme
+  - Clean display of browser and OS platform info (e.g., `CHROME / MACINTEL`)
+  - Built-in `try-catch` safety preventing blank screen crashes due to network routing anomalies on assets
 - Can be used with [flutter_dotenv](https://pub.dev/packages/flutter_dotenv) to load environment settings from a file, but not required
 
 ### Usage

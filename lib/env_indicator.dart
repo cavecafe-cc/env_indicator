@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -45,13 +46,32 @@ class AppInfo {
     envTextColor = _hexToColor(textColor);
     envHeight = double.parse(height);
 
-    final packageInfo = await PackageInfo.fromPlatform();
-    package = packageInfo.packageName;
-    version = packageInfo.version;
-    build = packageInfo.buildNumber;
-    deviceModel = await _getDeviceModel();
-    osVersion = await _getOsVersionInfo();
-    deviceDetail = Platform.operatingSystemVersion;
+    try {
+      final packageInfo = await PackageInfo.fromPlatform();
+      package = packageInfo.packageName;
+      version = packageInfo.version;
+      build = packageInfo.buildNumber;
+    } catch (e, stack) {
+      debugPrint("EnvIndicator: Failed to load package info. Error: $e\n$stack");
+    }
+
+    try {
+      if (kIsWeb) {
+        final deviceInfo = DeviceInfoPlugin();
+        final webInfo = await deviceInfo.webBrowserInfo;
+        final browserName = webInfo.browserName.name.toUpperCase();
+        final platformName = (webInfo.platform ?? 'UNKNOWN').toUpperCase();
+        deviceModel = "$browserName / $platformName";
+        osVersion = "WEB";
+        deviceDetail = "Browser: $browserName";
+      } else {
+        deviceModel = await _getDeviceModel();
+        osVersion = await _getOsVersionInfo();
+        deviceDetail = Platform.operatingSystemVersion;
+      }
+    } catch (e, stack) {
+      debugPrint("EnvIndicator: Failed to load device info. Error: $e\n$stack");
+    }
   }
 
   /// Returns true if the current environment is set to production (PROD).
@@ -67,6 +87,7 @@ class AppInfo {
   }
 
   Future<String> _getDeviceModel() async {
+    if (kIsWeb) return "WEB";
     final deviceInfo = DeviceInfoPlugin();
 
     if (Platform.isAndroid) {
@@ -81,6 +102,7 @@ class AppInfo {
   }
 
   Future<String> _getOsVersionInfo() async {
+    if (kIsWeb) return "WEB";
     final deviceInfo = DeviceInfoPlugin();
 
     if (Platform.isAndroid) {
@@ -105,74 +127,158 @@ class AppInfo {
 ///
 /// This widget is only visible in non-production environments.
 /// In production (PROD) builds, it renders as an empty [SizedBox].
-class EnvIndicator extends StatelessWidget {
+class EnvIndicator extends StatefulWidget {
   final AppInfo appInfo;
 
   /// Creates a new [EnvIndicator] widget.
   const EnvIndicator({super.key, required this.appInfo});
 
+  @override
+  State<EnvIndicator> createState() => _EnvIndicatorState();
+}
+
+class _EnvIndicatorState extends State<EnvIndicator> {
+  bool _isHovered = false;
+
   /// Builds the widget tree showing environment info and device details.
   @override
   Widget build(BuildContext context) {
-    if (appInfo.isProduction()) return const SizedBox.shrink();
+    if (widget.appInfo.isProduction()) return const SizedBox.shrink();
 
     final textStyle = const TextStyle(
       color: Colors.white,
       decoration: TextDecoration.none,
     );
 
+    final double size = kIsWeb ? 60.0 : 24.0;
+    final double buildFontSize = kIsWeb ? 16.0 : 7.0;
+    final double envFontSize = kIsWeb ? 10.0 : 4.0;
+
+    Widget indicatorDot = Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: widget.appInfo.envDotColor.withAlpha(150),
+        shape: BoxShape.circle,
+      ),
+      alignment: Alignment.center,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            widget.appInfo.build,
+            style: textStyle.copyWith(
+              fontSize: buildFontSize,
+              color: Colors.white,
+              fontWeight: kIsWeb ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+          Text(
+            widget.appInfo.env,
+            style: textStyle.copyWith(
+              fontSize: envFontSize,
+              color: Colors.white,
+              fontWeight: kIsWeb ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (kIsWeb) {
+      indicatorDot = MouseRegion(
+        onEnter: (_) => setState(() => _isHovered = true),
+        onExit: (_) => setState(() => _isHovered = false),
+        cursor: SystemMouseCursors.click,
+        child: indicatorDot,
+      );
+    }
+
     return Positioned(
       right: 16,
-      top: appInfo.envHeight,
+      top: widget.appInfo.envHeight,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Container(
-            width: 24,
-            height: 24,
-            decoration: BoxDecoration(
-              color: appInfo.envDotColor.withAlpha(150),
-              shape: BoxShape.circle,
-            ),
-            alignment: Alignment.center,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  appInfo.build,
-                  style: textStyle.copyWith(fontSize: 7, color: Colors.white),
+          indicatorDot,
+          if (kIsWeb && _isHovered) ...[
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+              decoration: BoxDecoration(
+                // ignore: deprecated_member_use
+                color: const Color(0xFF1E1E2E).withOpacity(0.95),
+                borderRadius: BorderRadius.circular(8.0),
+                border: Border.all(
+                  // ignore: deprecated_member_use
+                  color: widget.appInfo.envDotColor.withOpacity(0.5),
+                  width: 1.5,
                 ),
-                Text(
-                  appInfo.env,
-                  style: textStyle.copyWith(fontSize: 4, color: Colors.white),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 4),
-          RotatedBox(
-            quarterTurns: 1,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'App (${appInfo.version}) - ${appInfo.osVersion}',
-                  style: textStyle.copyWith(
-                    fontSize: 6,
-                    color: appInfo.envTextColor,
+                boxShadow: [
+                  BoxShadow(
+                    // ignore: deprecated_member_use
+                    color: widget.appInfo.envDotColor.withOpacity(0.5),
+                    blurRadius: 8.0,
+                    spreadRadius: 1.0,
                   ),
-                ),
-                Text(
-                  '${appInfo.deviceModel} - ${appInfo.deviceDetail}',
-                  style: textStyle.copyWith(
-                    fontSize: 6,
-                    color: appInfo.envTextColor,
+                ],
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'App: v${widget.appInfo.version}',
+                    style: textStyle.copyWith(fontSize: 12, fontWeight: FontWeight.w600),
                   ),
-                ),
-              ],
+                  const SizedBox(width: 8),
+                  Text(
+                    '|',
+                    style: textStyle.copyWith(fontSize: 12, color: Colors.white38),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Build: ${widget.appInfo.build}',
+                    style: textStyle.copyWith(fontSize: 12, fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    '|',
+                    style: textStyle.copyWith(fontSize: 12, color: Colors.white38),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'OS: ${widget.appInfo.deviceModel}',
+                    style: textStyle.copyWith(fontSize: 12, fontWeight: FontWeight.w600),
+                  ),
+                ],
+              ),
             ),
-          ),
+          ] else if (!kIsWeb) ...[
+            const SizedBox(height: 4),
+            RotatedBox(
+              quarterTurns: 1,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'App (${widget.appInfo.version}) - ${widget.appInfo.osVersion}',
+                    style: textStyle.copyWith(
+                      fontSize: 6,
+                      color: widget.appInfo.envTextColor,
+                    ),
+                  ),
+                  Text(
+                    '${widget.appInfo.deviceModel} - ${widget.appInfo.deviceDetail}',
+                    style: textStyle.copyWith(
+                      fontSize: 6,
+                      color: widget.appInfo.envTextColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ],
       ),
     );

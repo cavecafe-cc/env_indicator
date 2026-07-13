@@ -43,10 +43,10 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(title: const Text('Example')),
         body: Stack(
           children: [
-            Center(
+            const Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                children: const [
+                children: [
                   Text('Relax!', style: TextStyle(fontSize: 36.0)),
                   Text(
                     'And, check your app detail.',
